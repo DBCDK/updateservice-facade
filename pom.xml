@@ -89,6 +89,18 @@
             <artifactId>jaxb2-basics-runtime</artifactId>
             <version>1.11.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.2.8</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-rt</artifactId>
+            <version>2.3</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
