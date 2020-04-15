@@ -13,10 +13,6 @@ pipeline {
         pollSCM('H/20 * * * *')
     }
 
-    environment {
-
-    }
-
     tools {
         maven 'maven 3.5'
     }
