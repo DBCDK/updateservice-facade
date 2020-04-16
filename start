@@ -1,0 +1,27 @@
+./stop || true
+./build docker || exit 1
+
+echo "### Starting updateservice-facade docker ###"
+
+updateservice_facade_port=${UPDATESERVICE_FACADE_PORT:-8080}
+docker run --rm --name updateservice-facade -d -p ${updateservice_facade_port}:8080 \
+    -e INSTANCE_NAME=${USER}_dev \
+    -e UPDATESERVICE_URL="${UPDATESERVICE_URL}" \
+    -e JAVA_MAX_HEAP_SIZE=2G \
+    docker-io.dbc.dk/updateservice-facade:devel
+attempts=0
+max_attempts=60
+until $(curl --output /dev/null --silent --head --fail http://localhost:${updateservice_facade_port}/UpdateService/api/status); do
+    if [ ${attempts} -eq ${max_attempts} ]; then
+        break
+    fi
+
+    printf '.'
+    attempts=$(($attempts+1))
+    sleep 0.5
+done
+
+echo ""
+echo "### Status for updateservice-facade service ###"
+curl -vs http://localhost:${updateservice_facade_port}/UpdateService/rest/api/status
+echo ""

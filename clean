@@ -1,0 +1,6 @@
+echo "### cleaning updateservice-facade project ###"
+
+mvn clean
+git pull --ff-only
+docker rm -f updateservice-facade &>/dev/null || true
+exit 0

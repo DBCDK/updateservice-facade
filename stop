@@ -1,0 +1,3 @@
+echo "### Stopping updateservice-facade docker ###"
+
+docker stop updateservice-facade || exit 1
