@@ -1,0 +1,6 @@
+{
+  "appName": "updateservice-facade",
+  "profiles": [
+    "long-running-requests"
+  ]
+}
