@@ -6,7 +6,7 @@ echo "### Starting updateservice-facade docker ###"
 updateservice_facade_port=${UPDATESERVICE_FACADE_PORT:-8080}
 docker run --rm --name updateservice-facade -d -p ${updateservice_facade_port}:8080 \
     -e INSTANCE_NAME=${USER}_dev \
-    -e UPDATESERVICE_URL="${UPDATESERVICE_URL}" \
+    -e UPDATE_SERVICE_URL="${UPDATE_SERVICE_URL}" \
     -e JAVA_MAX_HEAP_SIZE=2G \
     docker-io.dbc.dk/updateservice-facade:devel
 attempts=0
