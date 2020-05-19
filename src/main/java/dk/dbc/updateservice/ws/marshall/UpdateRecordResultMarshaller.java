@@ -8,7 +8,6 @@ package dk.dbc.updateservice.ws.marshall;
 import dk.dbc.updateservice.common.Constants;
 import dk.dbc.updateservice.service.api.ObjectFactory;
 import dk.dbc.updateservice.service.api.UpdateRecordResult;
-import dk.dbc.updateservice.ws.UpdateServiceEndpoint;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
