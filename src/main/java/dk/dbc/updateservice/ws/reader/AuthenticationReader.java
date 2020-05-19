@@ -3,12 +3,13 @@
  *  See license text at https://opensource.dbc.dk/licenses/gpl-3.0
  */
 
-package dk.dbc.updateservice.ws;
+package dk.dbc.updateservice.ws.reader;
 
 import dk.dbc.updateservice.dto.AuthenticationDTO;
 import dk.dbc.updateservice.service.api.Authentication;
 
-public class CommonReader {
+public class AuthenticationReader {
+
     protected AuthenticationDTO convertExternalAuthenticationToInternalAuthenticationDto(Authentication authentication) {
         AuthenticationDTO authenticationDTO = null;
         if (authentication != null) {

@@ -3,14 +3,14 @@
  *  See license text at https://opensource.dbc.dk/licenses/gpl-3.0
  */
 
-package dk.dbc.updateservice.ws;
+package dk.dbc.updateservice.ws.reader;
 
 import dk.dbc.updateservice.dto.AuthenticationDTO;
 import dk.dbc.updateservice.dto.SchemasRequestDTO;
 import dk.dbc.updateservice.service.api.Authentication;
 import dk.dbc.updateservice.service.api.GetSchemasRequest;
 
-public class GetSchemasRequestReader extends CommonReader {
+public class GetSchemasRequestReader extends AuthenticationReader {
     private SchemasRequestDTO schemasRequestDTO;
 
     public GetSchemasRequestReader(GetSchemasRequest getSchemasRequest) {

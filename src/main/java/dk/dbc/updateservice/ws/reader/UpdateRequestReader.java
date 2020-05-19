@@ -3,7 +3,7 @@
  *  See license text at https://opensource.dbc.dk/licenses/gpl-3.0
  */
 
-package dk.dbc.updateservice.ws;
+package dk.dbc.updateservice.ws.reader;
 
 import dk.dbc.updateservice.dto.AuthenticationDTO;
 import dk.dbc.updateservice.dto.BibliographicRecordDTO;
@@ -26,7 +26,7 @@ import dk.dbc.updateservice.service.api.UpdateRecordRequest;
  * This class provides helper functions to read information from the request
  * and will include checks to ensure the information is valid.
  */
-public class UpdateRequestReader extends CommonReader {
+public class UpdateRequestReader extends AuthenticationReader {
     private final UpdateServiceRequestDTO updateServiceRequestDTO;
 
     public UpdateRequestReader(UpdateRecordRequest updateRecordRequest) {

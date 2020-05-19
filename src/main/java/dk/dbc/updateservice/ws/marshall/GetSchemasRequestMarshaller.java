@@ -5,10 +5,10 @@
 
 package dk.dbc.updateservice.ws.marshall;
 
+import dk.dbc.updateservice.common.Constants;
 import dk.dbc.updateservice.service.api.GetSchemasRequest;
 import dk.dbc.updateservice.service.api.ObjectFactory;
-import dk.dbc.updateservice.ws.GetSchemasRequestReader;
-import dk.dbc.updateservice.ws.UpdateServiceEndpoint;
+import dk.dbc.updateservice.ws.reader.GetSchemasRequestReader;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
@@ -51,7 +51,7 @@ public class GetSchemasRequestMarshaller {
             return stringWriter.toString();
         } catch (JAXBException e) {
             LOGGER.catching(e);
-            LOGGER.warn(UpdateServiceEndpoint.MARSHALLING_ERROR_MSG);
+            LOGGER.warn(Constants.MARSHALLING_ERROR_MSG);
             return new ReflectionToStringBuilder(getSchemasRequest, new RecursiveToStringStyle()).toString();
         }
     }

@@ -26,12 +26,21 @@ import dk.dbc.updateservice.ws.marshall.GetSchemasRequestMarshaller;
 import dk.dbc.updateservice.ws.marshall.GetSchemasResultMarshaller;
 import dk.dbc.updateservice.ws.marshall.UpdateRecordRequestMarshaller;
 import dk.dbc.updateservice.ws.marshall.UpdateRecordResultMarshaller;
+import dk.dbc.updateservice.ws.reader.GetSchemasRequestReader;
+import dk.dbc.updateservice.ws.reader.UpdateRequestReader;
+import dk.dbc.updateservice.ws.writer.GetSchemasResponseWriter;
+import dk.dbc.updateservice.ws.writer.UpdateResponseWriter;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import java.util.Enumeration;
 
 @SchemaValidation(outbound = false)
 @WebService(
@@ -40,35 +49,53 @@ import javax.jws.WebService;
         endpointInterface = "dk.dbc.updateservice.service.api.CatalogingUpdatePortType",
         targetNamespace = "http://oss.dbc.dk/ns/catalogingUpdate",
         wsdlLocation = "WEB-INF/classes/META-INF/wsdl/update/catalogingUpdate.wsdl",
-        name = Constants.UPDATE_SERVICE_VERSION)
+        name = Constants.UPDATE_SERVICE_ENDPOINT_NAME)
 @Stateless
 public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
     private static final XLogger LOGGER = XLoggerFactory.getXLogger(UpdateServiceEndpoint.class);
 
-    public static final String MARSHALLING_ERROR_MSG = "Got an error while marshalling input request, using reflection instead.";
-
     @Inject
     UpdateServiceUpdateConnector updateConnector;
+
+    @Resource
+    private WebServiceContext wsContext;
 
     @Override
     public UpdateRecordResult updateRecord(UpdateRecordRequest updateRecordRequest) {
         try {
-            final UpdateRecordRequestMarshaller updateRecordRequestMarshaller = new UpdateRecordRequestMarshaller(updateRecordRequest);
-            LOGGER.info("Entering updateRecord, marshal(updateRecordRequest):\n{}", updateRecordRequestMarshaller);
+            MessageContext mc = wsContext.getMessageContext();
+            HttpServletRequest req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
+            LOGGER.info("REQUEST:");
+            LOGGER.info("======================================");
+            LOGGER.info("Auth type: {}", req.getAuthType());
+            LOGGER.info("Context path: {}", req.getContextPath());
+            LOGGER.info("Content type: {}", req.getContentType());
+            LOGGER.info("Content length: {}", req.getContentLengthLong());
+            LOGGER.info("URI: {}", req.getRequestURI());
+            LOGGER.info("Client address: {}", req.getRemoteAddr());
+            LOGGER.info("Client host: {}", req.getRemoteHost());
+            LOGGER.info("Client port: {}", req.getRemotePort());
+            LOGGER.info("Headers");
+            LOGGER.info("--------------------------------------");
+            LOGGER.info("");
+            Enumeration<String> headerNames = req.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+                LOGGER.info("{}: {}", name, req.getHeader(name));
+            }
+            LOGGER.info("--------------------------------------");
 
-            final UpdateRequestReader requestReader = new UpdateRequestReader(updateRecordRequest);
-            final UpdateServiceRequestDTO updateServiceRequestDTO = requestReader.getUpdateServiceRequestDTO();
+            final UpdateRequestReader updateRequestReader = new UpdateRequestReader(updateRecordRequest);
+            final UpdateServiceRequestDTO updateServiceRequestDTO = updateRequestReader.getUpdateServiceRequestDTO();
+            final UpdateRecordRequestMarshaller updateRecordRequestMarshaller = new UpdateRecordRequestMarshaller(updateRecordRequest);
+            LOGGER.info("Entering Updateservice, marshal(updateServiceRequestDto):\n{}", updateRecordRequestMarshaller);
 
             final UpdateRecordResponseDTO updateRecordResponseDTO = updateConnector.updateRecord(updateServiceRequestDTO);
-
             final UpdateResponseWriter updateResponseWriter = new UpdateResponseWriter(updateRecordResponseDTO);
 
-            final UpdateRecordResult updateRecordResult = updateResponseWriter.getUpdateRecordResult();
-
-            final UpdateRecordResultMarshaller updateRecordResultMarshaller = new UpdateRecordResultMarshaller(updateRecordResult);
-            LOGGER.info("Leaving updateRecord, marshal(updateRecordResult):\n{}", updateRecordResultMarshaller);
-
-            return updateRecordResult;
+            final UpdateRecordResultMarshaller updateRecordResultMarshaller = new UpdateRecordResultMarshaller(updateResponseWriter.getResponse());
+            LOGGER.info("Leaving UpdateService, marshal(updateRecordResult):\n{}", updateRecordResultMarshaller);
+            return updateResponseWriter.getResponse();
         } catch (UpdateServiceUpdateConnectorException | JSONBException e) {
             LOGGER.error("Caught exception", e);
 
@@ -79,24 +106,26 @@ public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
     @Override
     public GetSchemasResult getSchemas(GetSchemasRequest getSchemasRequest) {
         try {
-            final GetSchemasRequestMarshaller getSchemasRequestMarshaller = new GetSchemasRequestMarshaller(getSchemasRequest);
-            LOGGER.info("Entering getSchemas, marshal(getSchemasRequest):\n{}", getSchemasRequestMarshaller);
-
+            GetSchemasResult getSchemasResult;
             final GetSchemasRequestReader getSchemasRequestReader = new GetSchemasRequestReader(getSchemasRequest);
             final SchemasRequestDTO schemasRequestDTO = getSchemasRequestReader.getSchemasRequestDTO();
+            final GetSchemasRequestMarshaller getSchemasRequestMarshaller = new GetSchemasRequestMarshaller(getSchemasRequest);
+            LOGGER.info("Entering getSchemas, marshal(schemasRequestDTO):\n{}", getSchemasRequestMarshaller);
 
             final SchemasResponseDTO schemasResponseDTO = updateConnector.getSchemas(schemasRequestDTO);
 
             final GetSchemasResponseWriter getSchemasResponseWriter = new GetSchemasResponseWriter(schemasResponseDTO);
-            final GetSchemasResult getSchemasResult = getSchemasResponseWriter.getGetSchemasResult();
+            getSchemasResult = getSchemasResponseWriter.getGetSchemasResult();
 
             final GetSchemasResultMarshaller getSchemasResultMarshaller = new GetSchemasResultMarshaller(getSchemasResult);
-            LOGGER.info("Leaving getSchemas, marshal(updateRecordResult):\n{}", getSchemasResultMarshaller);
+            LOGGER.info("Leaving getSchemas, marshal(getSchemasResult):\n{}", getSchemasResultMarshaller);
 
             return getSchemasResult;
-        } catch (UpdateServiceGetSchemasConnectorException e) {
-            LOGGER.error("Caught exception", e);
-
+        } catch (JSONBException e) {
+            LOGGER.error("Caught JSONBException exception", e);
+            return getSchemasResultError();
+        } catch (UpdateServiceUpdateConnectorException e) {
+            LOGGER.error("Caught UpdateServiceUpdateConnectorException exception", e);
             return getSchemasResultError();
         }
     }
@@ -126,6 +155,5 @@ public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
 
         return messages;
     }
-
 
 }

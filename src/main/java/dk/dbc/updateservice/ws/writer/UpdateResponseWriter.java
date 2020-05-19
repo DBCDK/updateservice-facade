@@ -3,12 +3,11 @@
  *  See license text at https://opensource.dbc.dk/licenses/gpl-3.0
  */
 
-package dk.dbc.updateservice.ws;
+package dk.dbc.updateservice.ws.writer;
 
 import dk.dbc.updateservice.dto.DoubleRecordFrontendDTO;
 import dk.dbc.updateservice.dto.MessageEntryDTO;
 import dk.dbc.updateservice.dto.UpdateRecordResponseDTO;
-import dk.dbc.updateservice.dto.UpdateStatusEnumDTO;
 import dk.dbc.updateservice.service.api.DoubleRecordEntries;
 import dk.dbc.updateservice.service.api.DoubleRecordEntry;
 import dk.dbc.updateservice.service.api.MessageEntry;
@@ -18,8 +17,6 @@ import dk.dbc.updateservice.service.api.UpdateRecordResult;
 import dk.dbc.updateservice.service.api.UpdateStatusEnum;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
-
-import java.util.List;
 
 /**
  * Class to generate a complete response.
@@ -44,7 +41,7 @@ public class UpdateResponseWriter {
         updateRecordResult = convertResponseFromInternalFormatToExternalFormat(updateRecordResponseDTO);
     }
 
-    public UpdateRecordResult getUpdateRecordResult() {
+    public UpdateRecordResult getResponse() {
         return updateRecordResult;
     }
 

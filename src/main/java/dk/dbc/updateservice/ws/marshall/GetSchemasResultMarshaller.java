@@ -5,6 +5,7 @@
 
 package dk.dbc.updateservice.ws.marshall;
 
+import dk.dbc.updateservice.common.Constants;
 import dk.dbc.updateservice.service.api.GetSchemasResult;
 import dk.dbc.updateservice.service.api.ObjectFactory;
 import dk.dbc.updateservice.ws.UpdateServiceEndpoint;
@@ -50,7 +51,7 @@ public class GetSchemasResultMarshaller {
             return stringWriter.toString();
         } catch (JAXBException e) {
             LOGGER.catching(e);
-            LOGGER.warn(UpdateServiceEndpoint.MARSHALLING_ERROR_MSG);
+            LOGGER.warn(Constants.MARSHALLING_ERROR_MSG);
             return new ReflectionToStringBuilder(getSchemasResult, new RecursiveToStringStyle()).toString();
         }
     }
