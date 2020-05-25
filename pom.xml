@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <groupId>dk.dbc</groupId>
-            <artifactId>build-rest-connector</artifactId>
+            <artifactId>buildservice-rest-connector</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
