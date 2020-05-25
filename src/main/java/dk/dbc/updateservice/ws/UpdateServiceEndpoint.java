@@ -63,8 +63,15 @@ public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
     @Override
     public UpdateRecordResult updateRecord(UpdateRecordRequest updateRecordRequest) {
         try {
-            MessageContext mc = wsContext.getMessageContext();
-            HttpServletRequest req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
+            String xForwardedFor = null;
+
+            final UpdateRequestReader updateRequestReader = new UpdateRequestReader(updateRecordRequest);
+            final UpdateServiceRequestDTO updateServiceRequestDTO = updateRequestReader.getUpdateServiceRequestDTO();
+            final UpdateRecordRequestMarshaller updateRecordRequestMarshaller = new UpdateRecordRequestMarshaller(updateRecordRequest);
+            LOGGER.info("Entering Updateservice, marshal(updateServiceRequestDto):\n{}", updateRecordRequestMarshaller);
+
+            final MessageContext mc = wsContext.getMessageContext();
+            final HttpServletRequest req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
             LOGGER.info("REQUEST:");
             LOGGER.info("======================================");
             LOGGER.info("Auth type: {}", req.getAuthType());
@@ -77,24 +84,30 @@ public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
             LOGGER.info("Client port: {}", req.getRemotePort());
             LOGGER.info("Headers");
             LOGGER.info("--------------------------------------");
-            LOGGER.info("");
             Enumeration<String> headerNames = req.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String name = headerNames.nextElement();
+                if ("X-Forwarded-For".equalsIgnoreCase(name)) {
+                    xForwardedFor = req.getHeader(name);
+                    LOGGER.info("Found X-Forwarded-For header: {}", xForwardedFor);
+                }
                 LOGGER.info("{}: {}", name, req.getHeader(name));
             }
             LOGGER.info("--------------------------------------");
 
-            final UpdateRequestReader updateRequestReader = new UpdateRequestReader(updateRecordRequest);
-            final UpdateServiceRequestDTO updateServiceRequestDTO = updateRequestReader.getUpdateServiceRequestDTO();
-            final UpdateRecordRequestMarshaller updateRecordRequestMarshaller = new UpdateRecordRequestMarshaller(updateRecordRequest);
-            LOGGER.info("Entering Updateservice, marshal(updateServiceRequestDto):\n{}", updateRecordRequestMarshaller);
+            if (xForwardedFor == null) {
+                LOGGER.info("Did not find X-Forwarded-For header so using client ip '{}' instead", req.getRemoteAddr());
+                xForwardedFor = req.getRemoteAddr();
+            }
 
-            final UpdateRecordResponseDTO updateRecordResponseDTO = updateConnector.updateRecord(updateServiceRequestDTO);
+            LOGGER.info("Setting X-Forwarded-for header to '{}'", xForwardedFor);
+
+            final UpdateRecordResponseDTO updateRecordResponseDTO = updateConnector.updateRecord(updateServiceRequestDTO, xForwardedFor);
             final UpdateResponseWriter updateResponseWriter = new UpdateResponseWriter(updateRecordResponseDTO);
 
             final UpdateRecordResultMarshaller updateRecordResultMarshaller = new UpdateRecordResultMarshaller(updateResponseWriter.getResponse());
             LOGGER.info("Leaving UpdateService, marshal(updateRecordResult):\n{}", updateRecordResultMarshaller);
+
             return updateResponseWriter.getResponse();
         } catch (UpdateServiceUpdateConnectorException | JSONBException e) {
             LOGGER.error("Caught exception", e);
