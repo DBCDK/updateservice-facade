@@ -13,6 +13,12 @@ import dk.dbc.oss.ns.catalogingbuild.RecordData;
 import dk.dbc.updateservice.dto.BibliographicRecordDTO;
 import dk.dbc.updateservice.dto.BuildResponseDTO;
 import dk.dbc.updateservice.dto.BuildStatusEnumDTO;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 
 public class BuildResultWriter {
 
@@ -22,9 +28,20 @@ public class BuildResultWriter {
         if (buildResponseDTO.getBuildStatusEnumDTO() == BuildStatusEnumDTO.OK) {
             BibliographicRecordDTO bibliographicRecordDTO = buildResponseDTO.getBibliographicRecordDTO();
             BibliographicRecord bibliographicRecord = new BibliographicRecord();
-
             RecordData recordData = new RecordData();
-            recordData.getContent().addAll(bibliographicRecordDTO.getRecordDataDTO().getContent());
+
+            /*
+                The objects in recordData.content must be w3c Element. However when we receive the content from the REST
+                service the data has been serialized to String. So before we add the content to the XML DTO we first have
+                to convert each element to an XML document.
+             */
+            for (Object o : bibliographicRecordDTO.getRecordDataDTO().getContent()) {
+                Document document = convertStringToDocument((String) o);
+                if (document != null) {
+                    recordData.getContent().add(document.getDocumentElement());
+                }
+            }
+
             bibliographicRecord.setRecordData(recordData);
 
             if (bibliographicRecordDTO.getExtraRecordDataDTO() != null) {
@@ -38,6 +55,18 @@ public class BuildResultWriter {
             buildResult.setBibliographicRecord(bibliographicRecord);
         }
         return buildResult;
+    }
+
+    private static Document convertStringToDocument(String xmlString) {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+
+            return builder.parse(new InputSource(new StringReader(xmlString)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static BuildStatusEnum get(BuildStatusEnumDTO buildStatusEnumDTO) {
