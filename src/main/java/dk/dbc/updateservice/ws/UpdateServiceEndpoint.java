@@ -58,7 +58,7 @@ public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
     UpdateServiceUpdateConnector updateConnector;
 
     @Resource
-    private WebServiceContext wsContext;
+    WebServiceContext wsContext;
 
     @Override
     public UpdateRecordResult updateRecord(UpdateRecordRequest updateRecordRequest) {
