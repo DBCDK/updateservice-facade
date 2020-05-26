@@ -46,7 +46,12 @@ public class BuildResultWriter {
 
             if (bibliographicRecordDTO.getExtraRecordDataDTO() != null) {
                 ExtraRecordData extraRecordData = new ExtraRecordData();
-                extraRecordData.getContent().addAll(bibliographicRecordDTO.getExtraRecordDataDTO().getContent());
+                for (Object o : bibliographicRecordDTO.getExtraRecordDataDTO().getContent()) {
+                    Document document = convertStringToDocument((String) o);
+                    if (document != null) {
+                        extraRecordData.getContent().add(document.getDocumentElement());
+                    }
+                }
                 bibliographicRecord.setExtraRecordData(extraRecordData);
             }
             bibliographicRecord.setRecordPacking(bibliographicRecordDTO.getRecordPacking());
