@@ -33,7 +33,7 @@ pipeline {
                 ]) {
                     sh "mvn verify pmd:pmd findbugs:findbugs"
                     archiveArtifacts(artifacts: "target/*.war,target/*.log", onlyIfSuccessful: true, fingerprint: true)
-                    // junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
+                    junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
                 }
             }
         }
