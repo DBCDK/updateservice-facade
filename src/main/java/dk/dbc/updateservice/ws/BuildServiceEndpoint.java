@@ -83,6 +83,11 @@ public class BuildServiceEndpoint implements BuildPortType {
             final BuildResult buildResult = new BuildResult();
             buildResult.setBuildStatus(BuildStatusEnum.FAILED_INTERNAL_ERROR);
             return buildResult;
+        } catch (Exception e){
+            LOGGER.error("Unexpected exception", e);
+            final BuildResult buildResult = new BuildResult();
+            buildResult.setBuildStatus(BuildStatusEnum.FAILED_INTERNAL_ERROR);
+            return buildResult;
         } finally {
             LOGGER.exit();
         }
