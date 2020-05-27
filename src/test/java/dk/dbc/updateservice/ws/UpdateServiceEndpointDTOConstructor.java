@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DTOConstructor {
+public class UpdateServiceEndpointDTOConstructor {
 
     private static final List<Object> content = Arrays.asList("<record xmlns=\"info:lc/xmlns/marcxchange-v1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/standards/iso25577/marcxchange-1-1.xsd\">\n" +
             "                            <leader>dbfhfgh2</leader>\n" +
