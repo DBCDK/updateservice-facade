@@ -9,6 +9,11 @@ pipeline {
         timestamps()
     }
 
+    environment {
+        DOCKER_IMAGE_NAME = "docker-io.dbc.dk/updateservice-facade"
+        DOCKER_IMAGE_VERSION = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+    }
+
     triggers {
         pollSCM('H/20 * * * *')
     }
@@ -57,6 +62,20 @@ pipeline {
                         unstableTotalAll: "0",
                         failedTotalAll  : "0"
                 ])
+            }
+        }
+
+        stage("Docker") {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
+            steps {
+                script {
+                    def image = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}")
+                    image.push()
+                }
             }
         }
     }
