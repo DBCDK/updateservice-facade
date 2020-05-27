@@ -15,14 +15,17 @@ import dk.dbc.updateservice.dto.BuildResponseDTO;
 import dk.dbc.updateservice.dto.BuildStatusEnumDTO;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.StringReader;
 
 public class BuildResultWriter {
 
-    public static BuildResult get(BuildResponseDTO buildResponseDTO) {
+    public static BuildResult get(BuildResponseDTO buildResponseDTO, DocumentBuilderFactory documentBuilderFactory) throws IOException, SAXException, ParserConfigurationException {
         BuildResult buildResult = new BuildResult();
         buildResult.setBuildStatus(get(buildResponseDTO.getBuildStatusEnumDTO()));
         if (buildResponseDTO.getBuildStatusEnumDTO() == BuildStatusEnumDTO.OK) {
@@ -36,7 +39,7 @@ public class BuildResultWriter {
                 to convert each element to an XML document.
              */
             for (Object o : bibliographicRecordDTO.getRecordDataDTO().getContent()) {
-                Document document = convertStringToDocument((String) o);
+                Document document = convertStringToDocument((String) o, documentBuilderFactory);
                 if (document != null) {
                     recordData.getContent().add(document.getDocumentElement());
                 }
@@ -47,7 +50,7 @@ public class BuildResultWriter {
             if (bibliographicRecordDTO.getExtraRecordDataDTO() != null) {
                 ExtraRecordData extraRecordData = new ExtraRecordData();
                 for (Object o : bibliographicRecordDTO.getExtraRecordDataDTO().getContent()) {
-                    Document document = convertStringToDocument((String) o);
+                    Document document = convertStringToDocument((String) o, documentBuilderFactory);
                     if (document != null) {
                         extraRecordData.getContent().add(document.getDocumentElement());
                     }
@@ -62,26 +65,26 @@ public class BuildResultWriter {
         return buildResult;
     }
 
-    private static Document convertStringToDocument(String xmlString) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
+    private static Document convertStringToDocument(String xmlString, DocumentBuilderFactory documentBuilderFactory) throws ParserConfigurationException, IOException, SAXException {
+        final DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
 
-            return builder.parse(new InputSource(new StringReader(xmlString)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 
     private static BuildStatusEnum get(BuildStatusEnumDTO buildStatusEnumDTO) {
         switch (buildStatusEnumDTO) {
-            case OK: return BuildStatusEnum.OK;
-            case FAILED_INTERNAL_ERROR: return BuildStatusEnum.FAILED_INTERNAL_ERROR;
-            case FAILED_INVALID_SCHEMA: return BuildStatusEnum.FAILED_INVALID_SCHEMA;
-            case FAILED_INVALID_RECORD_SCHEMA: return BuildStatusEnum.FAILED_INVALID_RECORD_SCHEMA;
-            case FAILED_UPDATE_INTERNAL_ERROR: return BuildStatusEnum.FAILED_UPDATE_INTERNAL_ERROR;
-            case FAILED_INVALID_RECORD_PACKING: return BuildStatusEnum.FAILED_INVALID_RECORD_PACKING;
+            case OK:
+                return BuildStatusEnum.OK;
+            case FAILED_INTERNAL_ERROR:
+                return BuildStatusEnum.FAILED_INTERNAL_ERROR;
+            case FAILED_INVALID_SCHEMA:
+                return BuildStatusEnum.FAILED_INVALID_SCHEMA;
+            case FAILED_INVALID_RECORD_SCHEMA:
+                return BuildStatusEnum.FAILED_INVALID_RECORD_SCHEMA;
+            case FAILED_UPDATE_INTERNAL_ERROR:
+                return BuildStatusEnum.FAILED_UPDATE_INTERNAL_ERROR;
+            case FAILED_INVALID_RECORD_PACKING:
+                return BuildStatusEnum.FAILED_INVALID_RECORD_PACKING;
         }
         return null;
     }

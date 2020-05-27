@@ -22,13 +22,18 @@ import dk.dbc.updateservice.ws.reader.BuildRequestReader;
 import dk.dbc.updateservice.ws.writer.BuildResultWriter;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.StringWriter;
 
 /**
@@ -51,6 +56,17 @@ public class BuildServiceEndpoint implements BuildPortType {
     @Inject
     UpdateServiceBuildConnector updateServiceBuildConnector;
 
+    DocumentBuilderFactory documentBuilderFactory;
+
+    @PostConstruct
+    public void postConstruct() {
+        try {
+            documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Build service web-service entrypoint.
      *
@@ -67,7 +83,7 @@ public class BuildServiceEndpoint implements BuildPortType {
             final BuildRequestDTO buildRequestDTO = BuildRequestReader.getDTO(parameters);
             final BuildResponseDTO buildResponseDTO = updateServiceBuildConnector.buildRecord(buildRequestDTO);
             LOGGER.info("buildResponseDTO: {}", buildResponseDTO);
-            final BuildResult buildResult = BuildResultWriter.get(buildResponseDTO);
+            final BuildResult buildResult = BuildResultWriter.get(buildResponseDTO, documentBuilderFactory);
             final String resultOutput = buildResultToString(buildResult);
 
             LOGGER.info("Build response: {}", resultOutput);
@@ -83,7 +99,12 @@ public class BuildServiceEndpoint implements BuildPortType {
             final BuildResult buildResult = new BuildResult();
             buildResult.setBuildStatus(BuildStatusEnum.FAILED_INTERNAL_ERROR);
             return buildResult;
-        } catch (Exception e){
+        } catch (SAXException | ParserConfigurationException | IOException e) {
+            LOGGER.error("Exception when parsing output record", e);
+            final BuildResult buildResult = new BuildResult();
+            buildResult.setBuildStatus(BuildStatusEnum.FAILED_INTERNAL_ERROR);
+            return buildResult;
+        } catch (Exception e) {
             LOGGER.error("Unexpected exception", e);
             final BuildResult buildResult = new BuildResult();
             buildResult.setBuildStatus(BuildStatusEnum.FAILED_INTERNAL_ERROR);
