@@ -12,6 +12,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = "docker-io.dbc.dk/updateservice-facade"
         DOCKER_IMAGE_VERSION = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
     }
 
     triggers {
