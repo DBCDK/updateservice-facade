@@ -78,5 +78,36 @@ pipeline {
                 }
             }
         }
+
+        stage("Deploy") {
+            agent {
+                docker {
+                    label workerNode
+                    image "docker.dbc.dk/build-env:latest"
+                    alwaysPull true
+                }
+            }
+            when {
+                expression {
+                    (currentBuild.result == null || currentBuild.result == 'SUCCESS') && env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                script {
+                    dir("deploy") {
+                        sh """
+                            set-new-version services/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets ${DOCKER_IMAGE_DIT_VERSION} -b master
+
+                            // This file doesn't exist yet
+                            //set-new-version k8s/services/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-performance-test ${DOCKER_IMAGE_DIT_VERSION} -b master
+
+							set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_DIT_VERSION} -b basismig
+                            set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_DIT_VERSION} -b fbstest
+                            set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_DIT_VERSION} -b metascrum-staging
+						"""
+                    }
+                }
+            }
+        }
     }
 }
