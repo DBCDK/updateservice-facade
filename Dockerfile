@@ -1,4 +1,4 @@
-FROM docker.dbc.dk/payara5-full:java11-6
+FROM docker.dbc.dk/payara5-full:latest
 
 ENV UPDATE_SERVICE_URL empty
 ENV BUILD_SERVICE_URL empty
