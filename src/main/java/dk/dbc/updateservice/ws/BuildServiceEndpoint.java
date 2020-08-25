@@ -41,7 +41,6 @@ import java.io.StringWriter;
  * <p/>
  * This class implements the SOAP operations for our web service.
  */
-@SchemaValidation(outbound = false)
 @WebService(
         serviceName = "CatalogingBuildServices",
         portName = "BuildPort",

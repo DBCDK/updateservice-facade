@@ -1,6 +1,7 @@
 {
   "appName": "updateservice-facade",
   "profiles": [
-    "long-running-requests"
+    "long-running-requests",
+    "nashorn"
   ]
 }
