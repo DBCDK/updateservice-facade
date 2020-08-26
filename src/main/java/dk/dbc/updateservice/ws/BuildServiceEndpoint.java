@@ -5,7 +5,6 @@
 
 package dk.dbc.updateservice.ws;
 
-import com.sun.xml.ws.developer.SchemaValidation;
 import dk.dbc.jsonb.JSONBException;
 import dk.dbc.oss.ns.catalogingbuild.Build;
 import dk.dbc.oss.ns.catalogingbuild.BuildPortType;
@@ -41,7 +40,6 @@ import java.io.StringWriter;
  * <p/>
  * This class implements the SOAP operations for our web service.
  */
-@SchemaValidation(outbound = false)
 @WebService(
         serviceName = "CatalogingBuildServices",
         portName = "BuildPort",
