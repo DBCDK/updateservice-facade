@@ -5,7 +5,6 @@
 
 package dk.dbc.updateservice.ws;
 
-import com.sun.xml.ws.developer.SchemaValidation;
 import dk.dbc.jsonb.JSONBException;
 import dk.dbc.oss.ns.catalogingbuild.Build;
 import dk.dbc.oss.ns.catalogingbuild.BuildPortType;
