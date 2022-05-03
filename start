@@ -9,7 +9,7 @@ docker run --rm --name updateservice-facade -d -p ${updateservice_facade_port}:8
     -e UPDATE_SERVICE_URL="${UPDATE_SERVICE_URL}" \
     -e BUILD_SERVICE_URL="${BUILD_SERVICE_URL}" \
     -e JAVA_MAX_HEAP_SIZE=2G \
-    docker-io.dbc.dk/updateservice-facade:devel
+    docker-metascrum.artifacts.dbccloud.dk/updateservice-facade:devel
 attempts=0
 max_attempts=60
 until $(curl --output /dev/null --silent --head --fail http://localhost:${updateservice_facade_port}/UpdateService/api/status); do
