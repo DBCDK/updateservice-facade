@@ -6,7 +6,7 @@
     <parent>
         <groupId>dk.dbc</groupId>
         <artifactId>microservice-pom</artifactId>
-        <version>latest-SNAPSHOT</version>
+        <version>java8-old-payara5</version>
         <relativePath/>
     </parent>
 
@@ -33,7 +33,7 @@
     <repositories>
         <repository>
             <id>mavenrepo.dbc.dk</id>
-            <url>http://mavenrepo.dbc.dk/nexus/content/groups/public</url>
+            <url>https://mavenrepo.dbc.dk/nexus/content/groups/public</url>
         </repository>
     </repositories>
 
