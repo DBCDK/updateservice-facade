@@ -40,17 +40,19 @@ pipeline {
         }
 
         stage('Warnings') {
-            script {
-                junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
+            steps {
+                script {
+                    junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
 
-                def java = scanForIssues tool: [$class: 'Java']
-                publishIssues issues: [java], unstableTotalAll: 10
+                    def java = scanForIssues tool: [$class: 'Java']
+                    publishIssues issues: [java], unstableTotalAll: 10
 
-                def pmd = scanForIssues tool: [$class: 'Pmd']
-                publishIssues issues: [pmd], unstableTotalAll: 1
+                    def pmd = scanForIssues tool: [$class: 'Pmd']
+                    publishIssues issues: [pmd], unstableTotalAll: 1
 
-                def spotbugs = scanForIssues tool: [$class: 'SpotBugs']
-                publishIssues issues: [spotbugs], unstableTotalAll: 1
+                    def spotbugs = scanForIssues tool: [$class: 'SpotBugs']
+                    publishIssues issues: [spotbugs], unstableTotalAll: 1
+                }
             }
         }
 
