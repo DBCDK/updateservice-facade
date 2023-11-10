@@ -3,7 +3,7 @@
 def workerNode = "devel10"
 
 pipeline {
-    agent {label workerNode}
+    agent { label workerNode }
 
     options {
         timestamps()
@@ -35,10 +35,9 @@ pipeline {
         stage('Build updateservice facade') {
             steps {
                 withMaven(maven: 'maven 3.5', options: [
-                        findbugsPublisher(disabled: true),
                         openTasksPublisher(highPriorityTaskIdentifiers: 'todo', ignoreCase: true, lowPriorityTaskIdentifiers: 'review', normalPriorityTaskIdentifiers: 'fixme,fix')
                 ]) {
-                    sh "mvn verify pmd:pmd findbugs:findbugs"
+                    sh "mvn verify pmd:pmd"
                     archiveArtifacts(artifacts: "target/*.war,target/*.log", onlyIfSuccessful: true, fingerprint: true)
                     junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
                 }
