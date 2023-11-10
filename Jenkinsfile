@@ -13,7 +13,7 @@ pipeline {
         DOCKER_IMAGE_NAME = "docker-metascrum.artifacts.dbccloud.dk/updateservice-facade"
         DOCKER_IMAGE_VERSION = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
-        MAVEN_OPTS="-Dmaven.repo.local=\${WORKSPACE}/.repo"
+        MAVEN_OPTS="-Dmaven.repo.local=.repo"
     }
 
     triggers {
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Build updateservice facade') {
             steps {
-                sh "mvn -B verify pmd:pmd"
+                sh "mvn -BX verify pmd:pmd"
                 junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
             }
         }
