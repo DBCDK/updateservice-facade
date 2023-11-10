@@ -34,24 +34,23 @@ pipeline {
 
         stage('Build updateservice facade') {
             steps {
-                withMaven(maven: 'maven 3.5', options: [
-                        openTasksPublisher(highPriorityTaskIdentifiers: 'todo', ignoreCase: true, lowPriorityTaskIdentifiers: 'review', normalPriorityTaskIdentifiers: 'fixme,fix')
-                ]) {
-                    sh "mvn verify pmd:pmd"
-                    archiveArtifacts(artifacts: "target/*.war,target/*.log", onlyIfSuccessful: true, fingerprint: true)
-                    junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
-                }
+                sh "mvn -B verify pmd:pmd"
+                junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
             }
         }
 
         stage('Warnings') {
-            steps {
-                warnings consoleParsers: [
-                        [parserName: "Java Compiler (javac)"],
-                        [parserName: "JavaDoc Tool"]
-                ],
-                        unstableTotalAll: "0",
-                        failedTotalAll: "0"
+            script {
+                junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
+
+                def java = scanForIssues tool: [$class: 'Java']
+                publishIssues issues: [java], unstableTotalAll: 10
+
+                def pmd = scanForIssues tool: [$class: 'Pmd']
+                publishIssues issues: [pmd], unstableTotalAll: 1
+
+                def spotbugs = scanForIssues tool: [$class: 'SpotBugs']
+                publishIssues issues: [spotbugs], unstableTotalAll: 1
             }
         }
 
