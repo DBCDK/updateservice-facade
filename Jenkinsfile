@@ -34,8 +34,8 @@ pipeline {
 
         stage('Build updateservice facade') {
             steps {
-                sh "mvn -B verify pmd:pmd"
-                junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
+                sh "mvn -B verify"
+//                junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
             }
         }
 
