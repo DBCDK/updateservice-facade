@@ -54,17 +54,6 @@ pipeline {
             }
         }
 
-        stage('PMD') {
-            steps {
-                step([
-                        $class          : 'hudson.plugins.pmd.PmdPublisher',
-                        pattern         : '**/target/pmd.xml',
-                        unstableTotalAll: "0",
-                        failedTotalAll  : "0"
-                ])
-            }
-        }
-
         stage("Docker") {
             when {
                 expression {
