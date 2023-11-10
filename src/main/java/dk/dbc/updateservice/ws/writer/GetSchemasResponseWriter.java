@@ -5,14 +5,14 @@
 
 package dk.dbc.updateservice.ws.writer;
 
+import dk.dbc.oss.ns.catalogingupdate.GetSchemasResult;
+import dk.dbc.oss.ns.catalogingupdate.MessageEntry;
+import dk.dbc.oss.ns.catalogingupdate.Messages;
+import dk.dbc.oss.ns.catalogingupdate.Schema;
+import dk.dbc.oss.ns.catalogingupdate.Type;
+import dk.dbc.oss.ns.catalogingupdate.UpdateStatusEnum;
 import dk.dbc.updateservice.dto.SchemaDTO;
 import dk.dbc.updateservice.dto.SchemasResponseDTO;
-import dk.dbc.updateservice.service.api.GetSchemasResult;
-import dk.dbc.updateservice.service.api.MessageEntry;
-import dk.dbc.updateservice.service.api.Messages;
-import dk.dbc.updateservice.service.api.Schema;
-import dk.dbc.updateservice.service.api.Type;
-import dk.dbc.updateservice.service.api.UpdateStatusEnum;
 
 public class GetSchemasResponseWriter {
     private GetSchemasResult getSchemasResult;

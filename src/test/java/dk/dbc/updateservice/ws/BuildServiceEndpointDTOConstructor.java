@@ -50,11 +50,11 @@ public class BuildServiceEndpointDTOConstructor {
             "</record>";
 
     public static BuildRequest constructBuildRequest(String schemaName) {
-        final BuildRequest buildRequest = new BuildRequest();
+        BuildRequest buildRequest = new BuildRequest();
 
         buildRequest.setSchemaName(schemaName);
 
-        final BibliographicRecord bibliographicRecord = new BibliographicRecord();
+        BibliographicRecord bibliographicRecord = new BibliographicRecord();
         bibliographicRecord.setRecordSchema("info:lc/xmlns/marcxchange-v1");
         bibliographicRecord.setRecordPacking("xml");
 
@@ -64,7 +64,7 @@ public class BuildServiceEndpointDTOConstructor {
     }
 
     public static BuildRequestDTO constructBuildRequestDTO(String schemaName) {
-        final BuildRequestDTO buildRequestDTO = new BuildRequestDTO();
+        BuildRequestDTO buildRequestDTO = new BuildRequestDTO();
         buildRequestDTO.setSchemaName(schemaName);
 
         BibliographicRecordDTO bibliographicRecordDTO = new BibliographicRecordDTO();
@@ -77,18 +77,18 @@ public class BuildServiceEndpointDTOConstructor {
     }
 
     public static BuildResult constructBuildResult() {
-        final BuildResult buildResult = new BuildResult();
+        BuildResult buildResult = new BuildResult();
         buildResult.setBuildStatus(BuildStatusEnum.OK);
 
         return buildResult;
     }
 
     public static BibliographicRecordDTO constructBibliographicRecordDTO(Object o) {
-        final BibliographicRecordDTO bibliographicRecordDTO = new BibliographicRecordDTO();
+        BibliographicRecordDTO bibliographicRecordDTO = new BibliographicRecordDTO();
         bibliographicRecordDTO.setRecordSchema("info:lc/xmlns/marcxchange-v1");
         bibliographicRecordDTO.setRecordPacking("xml");
 
-        final RecordDataDTO recordDataDTO = new RecordDataDTO();
+        RecordDataDTO recordDataDTO = new RecordDataDTO();
         recordDataDTO.setContent(Collections.singletonList(o));
 
         bibliographicRecordDTO.setRecordDataDTO(recordDataDTO);
@@ -97,18 +97,18 @@ public class BuildServiceEndpointDTOConstructor {
     }
 
     public static BuildResponseDTO constructBuildResponseDTO() {
-        final BuildResponseDTO buildResponseDTO = new BuildResponseDTO();
+        BuildResponseDTO buildResponseDTO = new BuildResponseDTO();
         buildResponseDTO.setBuildStatusEnumDTO(BuildStatusEnumDTO.OK);
 
         return buildResponseDTO;
     }
 
     public static BibliographicRecord constructBibliographicRecord(Object o, DocumentBuilderFactory documentBuilderFactory) throws IOException, SAXException, ParserConfigurationException {
-        final BibliographicRecord bibliographicRecord = new BibliographicRecord();
+        BibliographicRecord bibliographicRecord = new BibliographicRecord();
         bibliographicRecord.setRecordSchema("info:lc/xmlns/marcxchange-v1");
         bibliographicRecord.setRecordPacking("xml");
 
-        final RecordData recordData = new RecordData();
+        RecordData recordData = new RecordData();
         Document document = convertStringToDocument((String) o, documentBuilderFactory);
         if (document != null) {
             recordData.getContent().add(document.getDocumentElement());
@@ -120,7 +120,7 @@ public class BuildServiceEndpointDTOConstructor {
     }
 
     private static Document convertStringToDocument(String xmlString, DocumentBuilderFactory documentBuilderFactory) throws ParserConfigurationException, IOException, SAXException {
-        final DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
+        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
 
         return builder.parse(new InputSource(new StringReader(xmlString)));
     }

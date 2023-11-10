@@ -34,7 +34,7 @@ public class BuildResultWriter {
             RecordData recordData = new RecordData();
 
             /*
-                The objects in recordData.content must be w3c Element. However when we receive the content from the REST
+                The objects in recordData.content must be w3c Element. However, when we receive the content from the REST
                 service the data has been serialized to String. So before we add the content to the XML DTO we first have
                 to convert each element to an XML document.
              */

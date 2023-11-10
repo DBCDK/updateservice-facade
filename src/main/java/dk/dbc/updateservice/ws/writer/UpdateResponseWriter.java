@@ -1,20 +1,15 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU GPL v3
- *  See license text at https://opensource.dbc.dk/licenses/gpl-3.0
- */
-
 package dk.dbc.updateservice.ws.writer;
 
+import dk.dbc.oss.ns.catalogingupdate.DoubleRecordEntries;
+import dk.dbc.oss.ns.catalogingupdate.DoubleRecordEntry;
+import dk.dbc.oss.ns.catalogingupdate.MessageEntry;
+import dk.dbc.oss.ns.catalogingupdate.Messages;
+import dk.dbc.oss.ns.catalogingupdate.Type;
+import dk.dbc.oss.ns.catalogingupdate.UpdateRecordResult;
+import dk.dbc.oss.ns.catalogingupdate.UpdateStatusEnum;
 import dk.dbc.updateservice.dto.DoubleRecordFrontendDTO;
 import dk.dbc.updateservice.dto.MessageEntryDTO;
 import dk.dbc.updateservice.dto.UpdateRecordResponseDTO;
-import dk.dbc.updateservice.service.api.DoubleRecordEntries;
-import dk.dbc.updateservice.service.api.DoubleRecordEntry;
-import dk.dbc.updateservice.service.api.MessageEntry;
-import dk.dbc.updateservice.service.api.Messages;
-import dk.dbc.updateservice.service.api.Type;
-import dk.dbc.updateservice.service.api.UpdateRecordResult;
-import dk.dbc.updateservice.service.api.UpdateStatusEnum;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 

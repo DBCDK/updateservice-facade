@@ -5,6 +5,10 @@
 
 package dk.dbc.updateservice.ws.reader;
 
+import dk.dbc.oss.ns.catalogingupdate.Authentication;
+import dk.dbc.oss.ns.catalogingupdate.BibliographicRecord;
+import dk.dbc.oss.ns.catalogingupdate.UpdateOptionEnum;
+import dk.dbc.oss.ns.catalogingupdate.UpdateRecordRequest;
 import dk.dbc.updateservice.dto.AuthenticationDTO;
 import dk.dbc.updateservice.dto.BibliographicRecordDTO;
 import dk.dbc.updateservice.dto.ExtraRecordDataDTO;
@@ -12,10 +16,6 @@ import dk.dbc.updateservice.dto.OptionEnumDTO;
 import dk.dbc.updateservice.dto.OptionsDTO;
 import dk.dbc.updateservice.dto.RecordDataDTO;
 import dk.dbc.updateservice.dto.UpdateServiceRequestDTO;
-import dk.dbc.updateservice.service.api.Authentication;
-import dk.dbc.updateservice.service.api.BibliographicRecord;
-import dk.dbc.updateservice.service.api.UpdateOptionEnum;
-import dk.dbc.updateservice.service.api.UpdateRecordRequest;
 
 /**
  * Helper class to read the contents of an DBC UpdateRecordRequest.
