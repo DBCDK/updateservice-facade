@@ -36,7 +36,7 @@ pipeline {
         stage('Build updateservice facade') {
             steps {
                 sh "mvn -version"
-                sh "mvn -B -X verify pmd:pmd"
+                sh "mvn -B verify pmd:pmd"
                 junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
             }
         }
@@ -47,13 +47,13 @@ pipeline {
                     junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
 
                     def java = scanForIssues tool: [$class: 'Java']
-                    publishIssues issues: [java], unstableTotalAll: 10
+                    publishIssues issues: [java], unstableTotalAll: 0
 
                     def pmd = scanForIssues tool: [$class: 'Pmd']
-                    publishIssues issues: [pmd], unstableTotalAll: 1
+                    publishIssues issues: [pmd], unstableTotalAll: 0
 
                     def spotbugs = scanForIssues tool: [$class: 'SpotBugs']
-                    publishIssues issues: [spotbugs], unstableTotalAll: 1
+                    publishIssues issues: [spotbugs], unstableTotalAll: 0
                 }
             }
         }
