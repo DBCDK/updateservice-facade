@@ -19,10 +19,6 @@ import dk.dbc.updateservice.dto.BuildRequestDTO;
 import dk.dbc.updateservice.dto.BuildResponseDTO;
 import dk.dbc.updateservice.ws.reader.BuildRequestReader;
 import dk.dbc.updateservice.ws.writer.BuildResultWriter;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.xml.sax.SAXException;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -30,6 +26,10 @@ import jakarta.jws.WebService;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -43,7 +43,7 @@ import java.io.StringWriter;
 @WebService(
         serviceName = "CatalogingBuildServices",
         portName = "BuildPort",
-        endpointInterface = "dk.dbc.oss.ns.catalogingbuild.BuildPortType",
+            endpointInterface = "dk.dbc.oss.ns.catalogingbuild.BuildPortType",
         targetNamespace = "http://oss.dbc.dk/ns/catalogingBuild",
         wsdlLocation = "WEB-INF/classes/META-INF/wsdl/build/catalogingBuild.wsdl",
         name = Constants.BUILD_SERVICE_ENDPOINT_NAME)
