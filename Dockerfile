@@ -1,4 +1,4 @@
-FROM docker-dbc.artifacts.dbccloud.dk/payara5-full:latest
+FROM docker-dbc.artifacts.dbccloud.dk/payara6-micro:latest
 
 ENV UPDATE_SERVICE_URL empty
 ENV BUILD_SERVICE_URL empty
