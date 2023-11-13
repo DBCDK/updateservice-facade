@@ -5,7 +5,7 @@
 
 package dk.dbc.updateservice.ws;
 
-import dk.dbc.jsonb.JSONBException;
+import dk.dbc.commons.jsonb.JSONBException;
 import dk.dbc.oss.ns.catalogingbuild.Build;
 import dk.dbc.oss.ns.catalogingbuild.BuildPortType;
 import dk.dbc.oss.ns.catalogingbuild.BuildRequest;
@@ -23,13 +23,13 @@ import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.xml.sax.SAXException;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.jws.WebService;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.jws.WebService;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

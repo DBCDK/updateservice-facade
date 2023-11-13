@@ -1,9 +1,9 @@
 #!groovy
 
-def workerNode = "devel10"
+def workerNode = "devel11"
 
 pipeline {
-    agent {label workerNode}
+    agent { label workerNode }
 
     options {
         timestamps()
@@ -13,6 +13,7 @@ pipeline {
         DOCKER_IMAGE_NAME = "docker-metascrum.artifacts.dbccloud.dk/updateservice-facade"
         DOCKER_IMAGE_VERSION = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
+        MAVEN_OPTS="-Dmaven.repo.local=.repo"
     }
 
     triggers {
@@ -20,7 +21,8 @@ pipeline {
     }
 
     tools {
-        maven 'maven 3.5'
+        jdk 'jdk11'
+        maven 'Maven 3'
     }
 
     stages {
@@ -33,36 +35,26 @@ pipeline {
 
         stage('Build updateservice facade') {
             steps {
-                withMaven(maven: 'maven 3.5', options: [
-                        findbugsPublisher(disabled: true),
-                        openTasksPublisher(highPriorityTaskIdentifiers: 'todo', ignoreCase: true, lowPriorityTaskIdentifiers: 'review', normalPriorityTaskIdentifiers: 'fixme,fix')
-                ]) {
-                    sh "mvn verify pmd:pmd findbugs:findbugs"
-                    archiveArtifacts(artifacts: "target/*.war,target/*.log", onlyIfSuccessful: true, fingerprint: true)
-                    junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
-                }
+                sh "mvn -version"
+                sh "mvn -B verify pmd:pmd"
+                junit "**/target/surefire-reports/TEST-*.xml,**/target/failsafe-reports/TEST-*.xml"
             }
         }
 
         stage('Warnings') {
             steps {
-                warnings consoleParsers: [
-                        [parserName: "Java Compiler (javac)"],
-                        [parserName: "JavaDoc Tool"]
-                ],
-                        unstableTotalAll: "0",
-                        failedTotalAll: "0"
-            }
-        }
+                script {
+                    junit allowEmptyResults: true, testResults: '**/target/*-reports/*.xml'
 
-        stage('PMD') {
-            steps {
-                step([
-                        $class          : 'hudson.plugins.pmd.PmdPublisher',
-                        pattern         : '**/target/pmd.xml',
-                        unstableTotalAll: "0",
-                        failedTotalAll  : "0"
-                ])
+                    def java = scanForIssues tool: [$class: 'Java']
+                    publishIssues issues: [java], unstableTotalAll: 0
+
+                    def pmd = scanForIssues tool: [$class: 'Pmd']
+                    publishIssues issues: [pmd], unstableTotalAll: 0
+
+                    def spotbugs = scanForIssues tool: [$class: 'SpotBugs']
+                    publishIssues issues: [spotbugs], unstableTotalAll: 0
+                }
             }
         }
 

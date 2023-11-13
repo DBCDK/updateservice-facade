@@ -1,18 +1,19 @@
 package dk.dbc.updateservice.ws;
 
+import dk.dbc.oss.ns.catalogingupdate.GetSchemasRequest;
+import dk.dbc.oss.ns.catalogingupdate.GetSchemasResult;
+import dk.dbc.oss.ns.catalogingupdate.UpdateRecordRequest;
+import dk.dbc.oss.ns.catalogingupdate.UpdateRecordResult;
 import dk.dbc.updateservice.UpdateServiceUpdateConnector;
 import dk.dbc.updateservice.dto.SchemasRequestDTO;
 import dk.dbc.updateservice.dto.UpdateServiceRequestDTO;
-import dk.dbc.updateservice.service.api.GetSchemasRequest;
-import dk.dbc.updateservice.service.api.GetSchemasResult;
-import dk.dbc.updateservice.service.api.UpdateRecordRequest;
-import dk.dbc.updateservice.service.api.UpdateRecordResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,72 +53,72 @@ public class UpdateServiceEndpointTest {
 
     @Test
     void update_Ok_NoXForwardedFor() throws Exception {
-        final UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
+        UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
         updateRecordRequest.setBibliographicRecord(constructBibliographicRecordId());
 
-        final UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
+        UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
         updateServiceRequestDTO.setBibliographicRecordDTO(constructBibliographicRecordDTO());
 
         mockWsContext(null);
 
         when(updateServiceEndpoint.updateConnector.updateRecord(any(UpdateServiceRequestDTO.class), eq("localhost"))).thenReturn(constructUpdateRecordResponseDTO_OK());
 
-        final UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
-        final UpdateRecordResult expected = constructUpdateRecordResult_OK();
+        UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
+        UpdateRecordResult expected = constructUpdateRecordResult_OK();
 
         assertThat("update result is as expected", actual, is(expected));
     }
 
     @Test
     void update_Ok_XForwardedFor() throws Exception {
-        final UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
+        UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
         updateRecordRequest.setBibliographicRecord(constructBibliographicRecordId());
 
-        final UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
+        UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
         updateServiceRequestDTO.setBibliographicRecordDTO(constructBibliographicRecordDTO());
 
         mockWsContext("x-forwarded-for");
 
         when(updateServiceEndpoint.updateConnector.updateRecord(any(UpdateServiceRequestDTO.class), eq("x-forwarded-for"))).thenReturn(constructUpdateRecordResponseDTO_OK());
 
-        final UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
-        final UpdateRecordResult expected = constructUpdateRecordResult_OK();
+        UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
+        UpdateRecordResult expected = constructUpdateRecordResult_OK();
 
         assertThat("update result is as expected", actual, is(expected));
     }
 
     @Test
     void update_ValidationError() throws Exception {
-        final UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
+        UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
         updateRecordRequest.setBibliographicRecord(constructBibliographicRecordId());
 
-        final UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
+        UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
         updateServiceRequestDTO.setBibliographicRecordDTO(constructBibliographicRecordDTO());
 
         mockWsContext(null);
 
         when(updateServiceEndpoint.updateConnector.updateRecord(any(UpdateServiceRequestDTO.class), eq("localhost"))).thenReturn(constructUpdateRecordResponseDTO_ValidationError());
 
-        final UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
-        final UpdateRecordResult expected = constructUpdateRecordResult_ValidationError();
+        UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
+        UpdateRecordResult expected = constructUpdateRecordResult_ValidationError();
 
         assertThat("update result is as expected", actual, is(expected));
     }
 
     @Test
     void update_AuthenticationError() throws Exception {
-        final UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
+        UpdateRecordRequest updateRecordRequest = constructUpdateRecordRequest("010100");
         updateRecordRequest.setBibliographicRecord(constructBibliographicRecordId());
 
-        final UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
+        UpdateServiceRequestDTO updateServiceRequestDTO = constructUpdateServiceRequestDTO("010100");
         updateServiceRequestDTO.setBibliographicRecordDTO(constructBibliographicRecordDTO());
 
         mockWsContext("not-authorized");
 
         when(updateServiceEndpoint.updateConnector.updateRecord(any(UpdateServiceRequestDTO.class), eq("not-authorized"))).thenReturn(constructUpdateRecordResponseDTO_AuthenticationError());
 
-        final UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
-        final UpdateRecordResult expected = constructUpdateRecordResult_AuthenticationError();
+        UpdateRecordResult actual = updateServiceEndpoint.updateRecord(updateRecordRequest);
+        UpdateRecordResult expected = constructUpdateRecordResult_AuthenticationError();
 
         assertThat("update result is as expected", actual, is(expected));
     }
@@ -125,13 +126,13 @@ public class UpdateServiceEndpointTest {
     @Test
     void getSchemasRequest_Empty() throws Exception {
         final int schemaCount = 0;
-        final GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
-        final SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
+        GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
+        SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
 
         when(updateServiceEndpoint.updateConnector.getSchemas(eq(schemasRequestDTO))).thenReturn(constructSchemasResponseDTO_OK(schemaCount));
 
-        final GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
-        final GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
+        GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
+        GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
 
         assertThat("getSchemas contains 0 schemas", actual.getSchema().size(), is(schemaCount));
         assertThat("getSchemas matches expected", actual, is(expected));
@@ -140,13 +141,13 @@ public class UpdateServiceEndpointTest {
     @Test
     void getSchemasRequest_Single() throws Exception {
         final int schemaCount = 1;
-        final GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
-        final SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
+        GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
+        SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
 
         when(updateServiceEndpoint.updateConnector.getSchemas(eq(schemasRequestDTO))).thenReturn(constructSchemasResponseDTO_OK(schemaCount));
 
-        final GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
-        final GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
+        GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
+        GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
 
         assertThat("getSchemas contains 1 schema", actual.getSchema().size(), is(schemaCount));
         assertThat("getSchemas matches expected", actual, is(expected));
@@ -155,13 +156,13 @@ public class UpdateServiceEndpointTest {
     @Test
     void getSchemasRequest_Multiple() throws Exception {
         final int schemaCount = 3;
-        final GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
-        final SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
+        GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
+        SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
 
         when(updateServiceEndpoint.updateConnector.getSchemas(eq(schemasRequestDTO))).thenReturn(constructSchemasResponseDTO_OK(schemaCount));
 
-        final GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
-        final GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
+        GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
+        GetSchemasResult expected = constructGetSchemasResult_OK(schemaCount);
 
         assertThat("getSchemas contains 3 schemas", actual.getSchema().size(), is(schemaCount));
         assertThat("getSchemas matches expected", actual, is(expected));
@@ -169,20 +170,20 @@ public class UpdateServiceEndpointTest {
 
     @Test
     void getSchemasRequest_Failed() throws Exception {
-        final GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
-        final SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
+        GetSchemasRequest getSchemasRequest = constructGetSchemasRequest("010100");
+        SchemasRequestDTO schemasRequestDTO = constructSchemasRequestDTO("010100");
 
         when(updateServiceEndpoint.updateConnector.getSchemas(eq(schemasRequestDTO))).thenReturn(constructSchemasResponseDTO_Failed());
 
-        final GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
-        final GetSchemasResult expected = constructGetSchemasResult_Failed();
+        GetSchemasResult actual = updateServiceEndpoint.getSchemas(getSchemasRequest);
+        GetSchemasResult expected = constructGetSchemasResult_Failed();
 
         assertThat("Update returns OK", actual, is(expected));
     }
 
     private void mockWsContext(String xForwardedFor) {
-        final MessageContext messageContext = mock(MessageContext.class);
-        final HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+        MessageContext messageContext = mock(MessageContext.class);
+        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getAuthType()).thenReturn(null);
         when(httpServletRequest.getContextPath()).thenReturn(null);
         when(httpServletRequest.getContentType()).thenReturn(null);
@@ -191,7 +192,7 @@ public class UpdateServiceEndpointTest {
         when(httpServletRequest.getRemoteAddr()).thenReturn("localhost");
         when(httpServletRequest.getRemoteHost()).thenReturn(null);
         when(httpServletRequest.getRemotePort()).thenReturn(0);
-        final List<String> headers = new ArrayList<>();
+        List<String> headers = new ArrayList<>();
         if (xForwardedFor != null) {
             headers.add("X-Forwarded-For");
             when(httpServletRequest.getHeader(eq("X-Forwarded-For"))).thenReturn(xForwardedFor);

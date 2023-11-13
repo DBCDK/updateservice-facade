@@ -5,10 +5,10 @@
 
 package dk.dbc.updateservice.ws.reader;
 
+import dk.dbc.oss.ns.catalogingupdate.Authentication;
+import dk.dbc.oss.ns.catalogingupdate.GetSchemasRequest;
 import dk.dbc.updateservice.dto.AuthenticationDTO;
 import dk.dbc.updateservice.dto.SchemasRequestDTO;
-import dk.dbc.updateservice.service.api.Authentication;
-import dk.dbc.updateservice.service.api.GetSchemasRequest;
 
 public class GetSchemasRequestReader extends AuthenticationReader {
     private SchemasRequestDTO schemasRequestDTO;

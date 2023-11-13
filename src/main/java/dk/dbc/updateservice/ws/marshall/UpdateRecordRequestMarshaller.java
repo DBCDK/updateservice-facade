@@ -5,19 +5,19 @@
 
 package dk.dbc.updateservice.ws.marshall;
 
+import dk.dbc.oss.ns.catalogingupdate.ObjectFactory;
+import dk.dbc.oss.ns.catalogingupdate.UpdateRecordRequest;
 import dk.dbc.updateservice.common.Constants;
-import dk.dbc.updateservice.service.api.ObjectFactory;
-import dk.dbc.updateservice.service.api.UpdateRecordRequest;
 import dk.dbc.updateservice.ws.reader.UpdateRequestReader;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import java.io.StringWriter;
 
 public class UpdateRecordRequestMarshaller {

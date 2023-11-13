@@ -5,8 +5,8 @@
 
 package dk.dbc.updateservice.ws.reader;
 
+import dk.dbc.oss.ns.catalogingupdate.Authentication;
 import dk.dbc.updateservice.dto.AuthenticationDTO;
-import dk.dbc.updateservice.service.api.Authentication;
 
 public class AuthenticationReader {
 

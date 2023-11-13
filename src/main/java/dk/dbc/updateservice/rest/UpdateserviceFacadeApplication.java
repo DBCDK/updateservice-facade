@@ -5,7 +5,9 @@
 
 package dk.dbc.updateservice.rest;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
 /**
  * Created by stp on 25/11/15.
  */
-@javax.ws.rs.ApplicationPath("rest")
+@ApplicationPath("rest")
 public class UpdateserviceFacadeApplication extends Application {
     private static final Set<Class<?>> classes = new HashSet<>(
             Arrays.asList(StatusBean.class)
