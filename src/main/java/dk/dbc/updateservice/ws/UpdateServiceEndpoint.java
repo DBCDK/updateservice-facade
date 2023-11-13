@@ -30,9 +30,6 @@ import dk.dbc.updateservice.ws.reader.GetSchemasRequestReader;
 import dk.dbc.updateservice.ws.reader.UpdateRequestReader;
 import dk.dbc.updateservice.ws.writer.GetSchemasResponseWriter;
 import dk.dbc.updateservice.ws.writer.UpdateResponseWriter;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-
 import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -40,11 +37,13 @@ import jakarta.jws.WebService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.ws.WebServiceContext;
 import jakarta.xml.ws.handler.MessageContext;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 import java.util.Enumeration;
 
 @SchemaValidation(outbound = false)
-@WebService(serviceName = "UpdateService", portName = "CatalogingUpdatePort", endpointInterface = "dk.dbc.updateservice.service.api.CatalogingUpdatePortType", targetNamespace = "http://oss.dbc.dk/ns/catalogingUpdate", wsdlLocation = "WEB-INF/classes/META-INF/wsdl/update/catalogingUpdate.wsdl", name = Constants.UPDATE_SERVICE_ENDPOINT_NAME)
+@WebService(serviceName = "UpdateService", portName = "CatalogingUpdatePort", endpointInterface = "dk.dbc.oss.ns.catalogingupdate.CatalogingUpdatePortType", targetNamespace = "http://oss.dbc.dk/ns/catalogingUpdate", wsdlLocation = "WEB-INF/classes/META-INF/wsdl/update/catalogingUpdate.wsdl", name = Constants.UPDATE_SERVICE_ENDPOINT_NAME)
 @Stateless
 public class UpdateServiceEndpoint implements CatalogingUpdatePortType {
     private static final XLogger LOGGER = XLoggerFactory.getXLogger(UpdateServiceEndpoint.class);
