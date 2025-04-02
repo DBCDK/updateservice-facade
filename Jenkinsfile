@@ -82,7 +82,7 @@ pipeline {
             }
             when {
                 expression {
-                    (currentBuild.result == null || currentBuild.result == 'SUCCESS') && env.BRANCH_NAME == 'master'
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
             }
             steps {
