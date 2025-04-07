@@ -1,0 +1,45 @@
+### Expect an authentication error
+POST http://update-facade-service.fbstest.svc.cloud.dbc.dk/UpdateService/2.0
+Content-Type: text/xml
+
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:cat="http://oss.dbc.dk/ns/catalogingUpdate">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <cat:updateRecord>
+            <cat:updateRecordRequest>
+                <cat:authentication>
+                    <cat:groupIdAut>761500</cat:groupIdAut>
+                    <cat:passwordAut>12345678</cat:passwordAut>
+                    <cat:userIdAut>nobody</cat:userIdAut>
+                </cat:authentication>
+                <cat:schemaName>paahaengspost</cat:schemaName>
+                <cat:bibliographicRecord>
+                    <cat:recordSchema>info:lc/xmlns/marcxchange-v1</cat:recordSchema>
+                    <cat:recordPacking>xml</cat:recordPacking>
+                    <cat:recordData>
+                        <record xmlns="info:lc/xmlns/marcxchange-v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:lc/xmlns/marcxchange-v1 http://www.loc.gov/standards/iso25577/marcxchange-1-1.xsd">
+                            <leader>00000n    2200000   4500</leader>
+                            <datafield ind1="0" ind2="0" tag="001">
+                                <subfield code="a">136772988</subfield>
+                                <subfield code="b">191919</subfield>
+                                <subfield code="c">20230811182446</subfield>
+                                <subfield code="d">20230811</subfield>
+                                <subfield code="f">a</subfield>
+                            </datafield>
+                            <datafield ind1="0" ind2="0" tag="004">
+                                <subfield code="r">n</subfield>
+                                <subfield code="a">e</subfield>
+                            </datafield>
+                            <datafield ind1="0" ind2="0" tag="652">
+                                <subfield code="x">hest</subfield>
+                            </datafield>
+                        </record>
+                    </cat:recordData>
+                </cat:bibliographicRecord>
+                <cat:trackingId>jmeter-5</cat:trackingId>
+            </cat:updateRecordRequest>
+        </cat:updateRecord>
+    </soapenv:Body>
+</soapenv:Envelope>
