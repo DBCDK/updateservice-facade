@@ -88,7 +88,7 @@ pipeline {
                 script {
                     dir("deploy") {
                         sh """
-							set-new-version rawrepo/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets ${DOCKER_IMAGE_VERSION} -b master
+							set-new-version services/rawrepo/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets ${DOCKER_IMAGE_VERSION} -b master
 
 							set-new-version update-dataio-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b boblebad
 							set-new-version update-fbs-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b boblebad
