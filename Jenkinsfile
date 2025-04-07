@@ -21,8 +21,8 @@ pipeline {
     }
 
     tools {
-        jdk 'jdk11'
         maven 'Maven 3'
+        jdk 'jdk21'
     }
 
     stages {
@@ -89,11 +89,13 @@ pipeline {
                 script {
                     dir("deploy") {
                         sh """
-                            set-new-version services/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets ${DOCKER_IMAGE_VERSION} -b master
+							set-new-version rawrepo/update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/dit-gitops-secrets ${DOCKER_IMAGE_VERSION} -b master
 
+							set-new-version update-dataio-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b boblebad
+							set-new-version update-fbs-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b boblebad
+							
 							set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b basismig
                             set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b fbstest
-                            set-new-version update-facade-service.yml ${env.GITLAB_PRIVATE_TOKEN} metascrum/updateservice-facade-deploy ${DOCKER_IMAGE_VERSION} -b metascrum-staging
 						"""
                     }
                 }

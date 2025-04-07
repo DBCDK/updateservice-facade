@@ -6,8 +6,8 @@ echo "### Starting updateservice-facade docker ###"
 updateservice_facade_port=${UPDATESERVICE_FACADE_PORT:-8080}
 docker run --rm --name updateservice-facade -d -p ${updateservice_facade_port}:8080 \
     -e INSTANCE_NAME=${USER}_dev \
-    -e UPDATE_SERVICE_URL="${UPDATE_SERVICE_URL}" \
-    -e BUILD_SERVICE_URL="${BUILD_SERVICE_URL}" \
+    -e UPDATE_SERVICE_URL="${UPDATE_SERVICE_URL:-http://update-dataio-service.basismig.svc.cloud.dbc.dk/UpdateService/rest}" \
+    -e BUILD_SERVICE_URL="${BUILD_SERVICE_URL:-http://update-dataio-service.basismig.svc.cloud.dbc.dk/UpdateService/rest}" \
     -e JAVA_MAX_HEAP_SIZE=2G \
     docker-metascrum.artifacts.dbccloud.dk/updateservice-facade:devel
 attempts=0
