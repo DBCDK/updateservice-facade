@@ -1,5 +1,7 @@
 #!groovy
 
+@Library('dependency-track')
+
 def workerNode = "devel12"
 
 pipeline {
