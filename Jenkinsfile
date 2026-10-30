@@ -112,7 +112,7 @@ pipeline {
                 script {
                     dependencyTrackGate(
                         projectBom:  'target/sbom-java.json',
-                        projectTeam: 'de-team',
+                        projectTeam: 'febib',
                         projectType: 'java'
                     )
                 }
