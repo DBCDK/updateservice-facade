@@ -1,6 +1,6 @@
 #!groovy
 
-def workerNode = "devel11"
+def workerNode = "devel12"
 
 pipeline {
     agent { label workerNode }
@@ -17,7 +17,8 @@ pipeline {
     }
 
     triggers {
-        pollSCM('H/20 * * * *')
+        upstream(upstreamProjects: "Docker-payara6-bump-trigger",
+                threshold: hudson.model.Result.SUCCESS)
     }
 
     tools {
@@ -57,6 +58,32 @@ pipeline {
             }
         }
 
+        stage("sonarqube") {
+            steps {
+                ansiColor('xterm') {
+                    withSonarQubeEnv(installationName: 'sonarqube.dbc.dk') {
+                        script {
+                            def status = 0
+
+                            def sonarOptions = "-Dsonar.branch.name=${BRANCH_NAME}"
+                            if (env.BRANCH_NAME != 'master') {
+                                sonarOptions += " -Dsonar.newCode.referenceBranch=master"
+                            }
+
+                            // Do sonar via maven
+                            status += sh returnStatus: true, script: """
+                                mvn -B -Dmaven.repo.local=$WORKSPACE/.repo --no-transfer-progress $sonarOptions sonar:sonar
+                            """
+
+                            if (status != 0) {
+                                error("build failed")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         stage("Docker") {
             when {
                 expression {
@@ -67,6 +94,27 @@ pipeline {
                 script {
                     def image = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}")
                     image.push()
+                }
+            }
+        }
+
+        stage("quality gate") {
+            steps {
+                // wait for analysis results
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("supply-chain gate") {
+            steps {
+                script {
+                    dependencyTrackGate(
+                        projectBom:  'target/sbom-java.json',
+                        projectTeam: 'de-team',
+                        projectType: 'java'
+                    )
                 }
             }
         }
